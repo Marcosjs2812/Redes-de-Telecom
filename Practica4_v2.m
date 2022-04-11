@@ -1,0 +1,57 @@
+clear all;
+clf;
+
+% % % Simulación del modelo de haz de luz
+c = 3e8;
+eps0 = 8.85* (10^-12); %%Epsilon al vacío
+epsr = 4.7; %Permitividad relativa
+eps = eps0*epsr;
+
+miu0 = 4*pi*(10^-7);
+miur = 1;
+miu = miu0*miur;
+
+%%Para el núcleo
+a = 50e-6; %radio del núcleo
+r = 0 : 0.5e-6 : a; %radio
+phi = 0: 0.188: 6*pi;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[PHI1,R1] = meshgrid(phi,r);
+
+%%Aplicando las condiciones en frontera para el modo TMnm (Hz=0,fc=)
+f0 = 2000e9; %Para f0>fc_TMnm pero f0 < al siguiente modo fcTMnm
+omega = 2*pi*f0;
+n = 0;
+m = 1;
+v = 1/sqrt(miu*eps);
+p01 = 2.4;
+
+fc_TM01 = (p01*v)/(2*pi*a);
+lambdac_TM01 = v/(fc_TM01);
+BetaLambda_TM01 = omega*sqrt(eps*miu)*sqrt(1-((fc_TM01/f0)^2));
+omegac = 2*pi*fc_TM01; %Frecuencia de corte (Pasa alto) del modo TM01
+kc = omegac*sqrt(eps*miu);
+h_TM01 = kc;
+X_TM01 = h_TM01.*r;
+z_TMnm = lambdac_TM01*2; %Multiplos del doble de la longitud de onda
+
+
+t_TMnm = 1;
+for ind = 1:length(X_TM01)
+    for jnd = 1:length(phi)
+        Ez_TM01(ind,jnd) = besselj(n,X_TM01(ind))*(cos(n*phi(jnd)) + sin(n*phi(jnd))) * exp(i*BetaLambda_TM01*z_TMnm) * exp(i*omegac*t_TMnm); 
+    end
+end
+
+
+[x3,y3,z3] = pol2cart(PHI1,R1,real(Ez_TM01));
+
+figure(1);
+mesh(x3,y3,z3);
+view(90,90);
+xlabel('r[m]');
+ylabel('\phi [°]');
+zlabel("E_z{TM"+n+m+"}");
+title("E_z{TM"+n+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+
+

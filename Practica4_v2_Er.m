@@ -31,7 +31,6 @@ m = 1;
 
 for n = 1: 4
    for m = 1: 3
-       
         fc_TMnm = (pnm(n,m)*v)/(2*pi*a);
         f0 = fc_TMnm + 200e9; %Para f0>fc_TMnm pero f0 < al siguiente modo fcTMnm
         omega = 2*pi*f0;
@@ -42,28 +41,30 @@ for n = 1: 4
         kc = omegac*sqrt(eps*miu);
         h_TMnm = kc;
         X_TMnm = h_TMnm.*r;
-        z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
-
         t_TMnm = 1;
 
         coeficiente = (-i*(f0/fc_TMnm))/((1-(fc_TMnm/f0)^2)^(1/2));
-
-        for ind = 1:length(X_TMnm)
-            for jnd = 1:length(phi)
-                Er_TMnm(ind,jnd) = coeficiente*( (((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
+        
+        for t_TMnm = 1 : 1: 10
+            z_TMnm = lambdac_TMnm*t_TMnm; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
+            for ind = 1:length(X_TMnm)
+                for jnd = 1:length(phi)
+                    Er_TMnm(ind,jnd) = coeficiente*( (((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
+                end
             end
+            
+%             z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
+            [x3,y3,z3] = pol2cart(PHI1,R1,real(Er_TMnm));
+            mesh(x3,y3,z3);
+            view(45,45);
+            xlabel('r[m]');
+            ylabel('\phi [°]');
+            zlabel("E_r{TM"+(n-1)+m+"}");
+            title("E_r{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+            drawnow limitrate
+            pause(1)
         end
-
-
-        [x3,y3,z3] = pol2cart(PHI1,R1,real(Er_TMnm));
-
-        figure();
-        mesh(x3,y3,z3);
-        view(90,90);
-        xlabel('r[m]');
-        ylabel('\phi [°]');
-        zlabel("E_r{TM"+(n-1)+m+"}");
-        title("E_r{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+        figure()
    end
 end
 

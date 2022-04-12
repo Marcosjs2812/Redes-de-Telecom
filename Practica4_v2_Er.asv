@@ -45,26 +45,28 @@ for n = 1: 4
         z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
 
         t_TMnm = 1;
-        coeficiente = (-i*(f0/fc_TMnm))/((miu/eps)^(1/2));
-        for t_TMnm = 1 : 1: 10
-            z_TMnm = lambdac_TMnm*t_TMnm; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
+
+        coeficiente = (-i*(f0/fc_TMnm))/((1-(fc_TMnm/f0)^2)^(1/2));
+        
+        for t_TMnm = 1 : 1: 5
+            
             for ind = 1:length(X_TMnm)
                 for jnd = 1:length(phi)
-                    Hphi_TMnm(ind,jnd) = coeficiente*((((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
+                    Er_TMnm(ind,jnd) = coeficiente*( (((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
                 end
             end
-            [x3,y3,z3] = pol2cart(PHI1,R1,real(Hphi_TMnm));
-
+            
+            [x3,y3,z3] = pol2cart(PHI1,R1,real(Er_TMnm));
             mesh(x3,y3,z3);
             view(45,45);
             xlabel('r[m]');
             ylabel('\phi [°]');
-            zlabel("H_\phi{TM"+(n-1)+m+"}");
-            title("H_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
-            drawnow limitrate;
-            pause(0.1);
+            zlabel("E_r{TM"+(n-1)+m+"}");
+            title("E_r{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+            drawnow limitrate
+            pause(1)
         end
-        figure();
+        figure()
    end
 end
 

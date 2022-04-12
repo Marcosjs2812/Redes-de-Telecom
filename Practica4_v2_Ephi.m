@@ -31,43 +31,41 @@ m = 1;
 
 for n = 1: 4
    for m = 1: 3
-       if (n == 2 && m == 3) || (n == 4 && m == 1) || (n == 4 && m == 3)
-            
-       else
-            fc_TMnm = (pnm(n,m)*v)/(2*pi*a);
-            f0 = fc_TMnm + 200e9; %Para f0>fc_TMnm pero f0 < al siguiente modo fcTMnm
-            omega = 2*pi*f0;
+       
+        fc_TMnm = (pnm(n,m)*v)/(2*pi*a);
+        f0 = fc_TMnm + 200e9; %Para f0>fc_TMnm pero f0 < al siguiente modo fcTMnm
+        omega = 2*pi*f0;
 
-            lambdac_TMnm = v/(fc_TMnm);
-            BetaLambda_TMnm = omega*sqrt(eps*miu)*sqrt(1-((fc_TMnm/f0)^2));
-            omegac = 2*pi*fc_TMnm; %Frecuencia de corte (Pasa alto) del modo TM01
-            kc = omegac*sqrt(eps*miu);
-            h_TMnm = kc;
-            X_TMnm = h_TMnm.*r;
-            z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
+        lambdac_TMnm = v/(fc_TMnm);
+        BetaLambda_TMnm = omega*sqrt(eps*miu)*sqrt(1-((fc_TMnm/f0)^2));
+        omegac = 2*pi*fc_TMnm; %Frecuencia de corte (Pasa alto) del modo TM01
+        kc = omegac*sqrt(eps*miu);
+        h_TMnm = kc;
+        X_TMnm = h_TMnm.*r;
+        z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
 
-            t_TMnm = 1;
-            gama = i*BetaLambda_TMnm;
+        t_TMnm = 1;
+        gama = i*BetaLambda_TMnm;
 
-            coeficiente = (-i/kc)*(f0/fc_TMnm)*((n-1)/gama)*(sqrt(1-(fc_TMnm/f0)^2));
-            
-            for ind = 1:length(X_TMnm)
-                for jnd = 1:length(phi)
-                    Ephi_TMnm(ind,jnd) = coeficiente*(besselj((n-1),X_TMnm(ind)))*(cos((n-1)*phi(jnd)) - sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
-                end
+        coeficiente = (-i/kc)*(f0/fc_TMnm)*((n-1)/gama)*(sqrt(1-(fc_TMnm/f0)^2));
+
+        for ind = 1:length(X_TMnm)
+            for jnd = 1:length(phi)
+                Ephi_TMnm(ind,jnd) = coeficiente*(besselj((n-1),X_TMnm(ind)))*(cos((n-1)*phi(jnd)) - sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
             end
+        end
 
 
-            [x3,y3,z3] = pol2cart(PHI1,R1,real(Ephi_TMnm));
+        [x3,y3,z3] = pol2cart(PHI1,R1,real(Ephi_TMnm));
 
-            figure();
-            mesh(x3,y3,z3);
-            view(90,90);
-            xlabel('r[m]');
-            ylabel('\phi [°]');
-            zlabel("E_\phi{TM"+(n-1)+m+"}");
-            title("E_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
-       end
+        figure();
+        mesh(x3,y3,z3);
+        view(90,90);
+        xlabel('r[m]');
+        ylabel('\phi [°]');
+        zlabel("E_\phi{TM"+(n-1)+m+"}");
+        title("E_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+
    end
 end
 

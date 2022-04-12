@@ -62,7 +62,7 @@ for n = 1: 4
             zlabel("H_\phi{TM"+(n-1)+m+"}");
             title("H_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
             drawnow limitrate;
-            pause(0.1);
+            pause(0.5);
         end
         figure();
    end

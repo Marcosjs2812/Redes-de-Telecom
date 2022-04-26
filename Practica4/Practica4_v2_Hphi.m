@@ -31,7 +31,7 @@ m = 1;
 
 for n = 1: 4
    for m = 1: 3
-    
+       
         fc_TMnm = (pnm(n,m)*v)/(2*pi*a);
         f0 = fc_TMnm + 200e9; %Para f0>fc_TMnm pero f0 < al siguiente modo fcTMnm
         omega = 2*pi*f0;
@@ -45,25 +45,26 @@ for n = 1: 4
         z_TMnm = lambdac_TMnm*2; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
 
         t_TMnm = 1;
-
-        coeficiente = (-i*(f0/fc_TMnm))/((miu/eps)^(1/2));
-
-        for ind = 1:length(X_TMnm)
-            for jnd = 1:length(phi)
-                Hphi_TMnm(ind,jnd) = coeficiente*((((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
+        coeficiente = (i*n*(f0/fc_TMnm)/kc*a)*sqrt(1-(f0/fc_TMnm)^2);
+        for t_TMnm = 1 : 1: 10
+            z_TMnm = lambdac_TMnm*t_TMnm; %Multiplos del doble de la longitud de onda, z = 0-5m,0-10m,0-100m (dependiendo)
+            for ind = 1:length(X_TMnm)
+                for jnd = 1:length(phi)
+                    Hphi_TMnm(ind,jnd) = coeficiente*((((n-1)/X_TMnm(ind))*(besselj((n-1),X_TMnm(ind)))) - (besselj((n),X_TMnm(ind))))*(cos((n-1)*phi(jnd)) + sin((n-1)*phi(jnd))) * exp(i*BetaLambda_TMnm*z_TMnm); 
+                end
             end
+            [x3,y3,z3] = pol2cart(PHI1,R1,real(Hphi_TMnm));
+
+            mesh(x3,y3,z3);
+            view(45,45);
+            xlabel('r[m]');
+            ylabel('\phi [°]');
+            zlabel("H_\phi{TM"+(n-1)+m+"}");
+            title("H_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
+            drawnow limitrate;
+            pause(0.5);
         end
-
-
-        [x3,y3,z3] = pol2cart(PHI1,R1,real(Hphi_TMnm));
-
         figure();
-        mesh(x3,y3,z3);
-        view(90,90);
-        xlabel('r[m]');
-        ylabel('\phi [°]');
-        zlabel("H_\phi{TM"+(n-1)+m+"}");
-        title("H_\phi{TM"+(n-1)+m+"}, z ="+z_TMnm+"m, t = "+t_TMnm+"s");
    end
 end
 

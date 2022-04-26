@@ -20,13 +20,10 @@ TE_pnm = [
     13.32 11.7 13.17 14.58
 ];
 
-calculoModosLP2(TM_pnm(1,2),TM_pnm(1,2),"TM_{11}","TM_{11}"); %Modo LP01
-calculoModosLP4(TE_pnm(1,1),TM_pnm(1,1),TM_pnm(1,3),TM_pnm(1,3),"TE_{11}","TM_{11}","TM_{21}","TM_{21}"); %Modo LP11
+calculoModosLP2(TM_pnm(1,1),"TM_{11"); %Modo LP01
+calculoModosLP4(TM_pnm(1,1),TE_pnm(1,1),TM_pnm(1,3),TM_pnm(1,3),"TM_{11}","TE_{11}","TM_{21}","TM_{21}"); %Modo LP11
 calculoModosLP4(TE_pnm(1,2),TE_pnm(1,2),TM_pnm(1,4),TM_pnm(1,4),"TE_{11}","TE_{11}","TM_{31}","TM_{31}"); %Modo LP21
-calculoModosLP2(TM_pnm(2,2),TM_pnm(2,2),"TM_{12}","TM_{12}"); %Modo LP02
-% calculoModosLP4(TE_pnm(1,3),TE_pnm(1,3),TM_pnm(4,1),TM_pnm(4,1),"TE_{11}","TE_{11}","TM_{31}","TM_{31}"); %Modo LP31
-calculoModosLP4(TE_pnm(2,1),TM_pnm(2,1),TM_pnm(2,3),TM_pnm(2,3),"TE_{02}","TM_{02}","TM_{22}","TM_{22}"); %Modo LP12
-
+calculoModosLP2(TM_pnm(1,3),"TM_{12}"); %Modo LP01
 
 
 
@@ -116,7 +113,7 @@ function calculoModosLP2(p1,p2,np1,np2)
     hold on;
 end
 
-function calculoModosLP4(p1,p2,p3,p4,np1,np2,np3,np4)
+function calculoModosLP4(p1,p2,p3,p4,np1,np2,np3,np)
     c=3e8;
     eps0=8.85*(10^-12);
     epsr=4.7;
